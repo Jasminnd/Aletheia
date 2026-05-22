@@ -1,4 +1,4 @@
-# Aletheia Library Management System
+# <b>Aletheia Library Management System</b>
 
 # <b>App name:</b>
 Aletheia (from the Greek word for “truth” or “unconcealed knowledge.” suggest that books reveal wisdom)

@@ -15,7 +15,7 @@ An app made to track for users to find the book that they want and to check if i
 # <b>Goal:</b> 
 The goal of this app is to check and track the availability of the book if it’s possible to be borrowed and object driven focus on books
 
-# VProblem being solved:</b>
+# Problem being solved:</b>
 To make the target audience’s life easier by making an online app that tracks the availability of the books and borrow/reserve them without the need to go to the library directly.
 
 # <b>Competition:</b>

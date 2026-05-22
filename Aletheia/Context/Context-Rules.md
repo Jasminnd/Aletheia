@@ -68,23 +68,23 @@ Always prioritize in this order:
 
 ## 1. Correctness
 
-Does it work properly?
+The system behaves according to business rules.
 
 ## 2. Readability
 
-Can another developer understand it quickly?
+The codebase remains understandable for future developers.
 
 ## 3. Stability
 
-Will it break easily?
+Features behave consistently without unexpected side effects.
 
 ## 4. Maintainability
 
-Can future features be added safely?
+New features can be added safely without breaking existing functionality.
 
 ## 5. Optimization
 
-Only optimize AFTER stability.
+Optimization happens only after the system is stable and correct.
 
 ---
 
@@ -109,7 +109,7 @@ AuthSession
 Notification
 ```
 
-Each object should own its own responsibility.
+Each object owns its own responsibility.
 
 ---
 
@@ -133,10 +133,9 @@ NOT responsible for:
 
 # 2. Every Class Should Feel Predictable
 
-When opening a class, developers should instantly know:
+Every class has a clearly defined responsibility.
 
-* what it does
-* what it should NOT do
+The purpose of the class must be immediately understandable.
 
 ---
 
@@ -146,7 +145,7 @@ When opening a class, developers should instantly know:
 BookService
 ```
 
-Expected:
+Responsibilities:
 
 * borrow validation
 * availability checks
@@ -160,7 +159,7 @@ Expected:
 BookService
 ```
 
-Unexpectedly:
+Unrelated responsibilities:
 
 * sends OTPs
 * validates JWTs
@@ -180,12 +179,14 @@ Controllers are:
 traffic managers
 ```
 
-They:
+Controllers:
 
 * receive requests
 * validate request structure
 * call services
 * return responses
+
+Controllers never contain business logic.
 
 ---
 
@@ -195,7 +196,7 @@ They:
 @PostMapping("/borrow")
 public ResponseEntity<?> borrowBook() {
 
-    // 200 lines of logic
+    // 200 lines of business logic
 }
 ```
 
@@ -225,7 +226,7 @@ Services contain:
 
 # 4. Protect Your Domain
 
-Entities should not be easily corrupted.
+Entities are protected from invalid modification.
 
 ---
 
@@ -235,7 +236,7 @@ Entities should not be easily corrupted.
 private int availableCopies;
 ```
 
-Modified through methods only.
+Modified through controlled methods only.
 
 ---
 
@@ -245,44 +246,32 @@ Modified through methods only.
 public int availableCopies;
 ```
 
-This invites invalid states.
+This creates invalid states and unpredictable behavior.
 
 ---
 
 # 5. Business Rules First, Technology Second
 
-Focus on the actual rules.
+The system focuses on business rules before implementation details.
 
 ---
 
-# Example
-
-Instead of thinking:
+# Borrowing Rules
 
 ```text
-How do I code borrowing?
+cannot borrow unavailable books
+max 5 borrowed books
+due date is 14 days
+overdue books must be tracked
 ```
 
-Think:
-
-```text
-What are the rules of borrowing?
-```
-
-Rules:
-
-* cannot borrow unavailable books
-* max 5 borrowed books
-* due date is 14 days
-* overdue books must be tracked
-
-THEN implement them cleanly.
+Implementation follows these rules directly.
 
 ---
 
 # 6. Avoid “Magic”
 
-Code should feel obvious.
+Code behavior remains explicit and self-explanatory.
 
 ---
 
@@ -291,8 +280,6 @@ Code should feel obvious.
 ```java
 processBookState();
 ```
-
-What does that even mean?
 
 ---
 
@@ -304,13 +291,13 @@ updateAvailableCopies();
 validateBorrowLimit();
 ```
 
-Explicit > clever.
+Explicit naming is mandatory.
 
 ---
 
 # 7. Services Should Read Like Stories
 
-Good service methods feel human-readable.
+Service methods follow readable sequential workflows.
 
 ---
 
@@ -332,22 +319,21 @@ reduceAvailableCopies();
 sendNotification();
 ```
 
-Readable logic is professional logic.
+Readable business logic is preferred over clever abstractions.
 
 ---
 
 # 8. Avoid Massive Classes Early
 
----
+Classes remain small and focused.
 
-# If You Notice:
+Classes with:
 
-* too many methods
 * unrelated logic
-* giant files
-* hard-to-find code
+* excessive methods
+* giant file sizes
 
-STOP and split responsibilities.
+must be split immediately.
 
 ---
 
@@ -365,7 +351,7 @@ NotificationService
 
 # 9. Prefer Explicitness Over Abstraction
 
-Do not abstract too early.
+The system avoids premature abstraction.
 
 ---
 
@@ -383,11 +369,13 @@ UniversalManagerFactoryHandlerProcessor
 BorrowService
 ```
 
-Simple names scale better.
+Simple naming is preferred.
 
 ---
 
 # 10. Database Design Should Reflect Reality
+
+Relationships model real-world borrowing behavior.
 
 ---
 
@@ -397,21 +385,21 @@ Simple names scale better.
 User -> BorrowRecord -> Book
 ```
 
-This naturally models borrowing.
-
 ---
 
 # BAD RELATIONSHIPS
 
-Random duplicated book/user fields everywhere.
+Duplicated book and user data across unrelated tables.
 
 ---
 
 # 11. DTOs Are API Contracts
 
-Entities are internal.
+Entities are internal database models.
 
-DTOs are external.
+DTOs are external API contracts.
+
+Entities are never exposed directly to frontend clients.
 
 ---
 
@@ -421,7 +409,7 @@ DTOs are external.
 BookEntity
 ```
 
-Database object.
+Internal database model.
 
 ---
 
@@ -429,23 +417,23 @@ Database object.
 BookResponseDTO
 ```
 
-Frontend response object.
+Frontend response model.
 
 ---
 
-# WHY?
+# DTO PURPOSE
 
-Prevents:
+DTOs prevent:
 
-* leaking sensitive data
-* frontend dependency on DB structure
-* accidental API breaks
+* leaking sensitive fields
+* frontend dependency on database structure
+* accidental API breaking changes
 
 ---
 
 # 12. Avoid Premature Complexity
 
-This is critical.
+The MVP remains simple and focused.
 
 ---
 
@@ -460,58 +448,56 @@ This is critical.
 
 ---
 
-# Why?
-
-Because the MVP problem is:
+# MVP CORE PROBLEM
 
 ```text
 track books and borrowing
 ```
 
-Solve THAT first.
+The system solves this first before adding advanced features.
 
 ---
 
 # 13. Build Features Vertically
 
-Complete one feature fully before moving on.
+Features are completed fully before starting unrelated modules.
 
 ---
 
-# GOOD DEVELOPMENT ORDER
+# DEVELOPMENT ORDER
 
 ## Authentication
 
-DONE fully.
+Completed fully before proceeding.
 
 Then:
 
 ## Book Management
 
-DONE fully.
+Completed fully before proceeding.
 
 Then:
 
 ## Borrowing
 
-DONE fully.
+Completed fully before proceeding.
 
 ---
 
-# BAD
+# BAD DEVELOPMENT FLOW
 
-Starting:
+Simultaneous unfinished development of:
 
-* auth
+* authentication
 * analytics
-* notifications
 * recommendations
-
-all simultaneously.
+* notifications
 
 ---
 
 # 14. Keep Frontend Components Focused
+
+React components remain small reusable UI units.
 
 ---
 
@@ -524,23 +510,21 @@ SearchBar
 ReturnModal
 ```
 
-Small reusable UI units.
-
 ---
 
-# BAD
+# BAD COMPONENT
 
 ```text
 MegaDashboardComponent
 ```
 
-3000-line React component nightmare.
+with unrelated responsibilities and excessive complexity.
 
 ---
 
 # 15. State Should Be Predictable
 
-Frontend state should feel simple.
+Frontend state remains simple and explicit.
 
 ---
 
@@ -557,25 +541,27 @@ searchQuery
 
 # BAD
 
-Huge deeply nested state trees.
+Deeply nested global state structures with mixed responsibilities.
 
 ---
 
 # 16. Backend Should Own Business Truth
 
-Frontend should NOT decide:
+The backend is the single source of truth.
+
+Frontend applications never decide:
 
 * borrow limits
 * due dates
 * permissions
 
-Backend enforces rules.
-
-Always.
+All business rules are enforced by backend services.
 
 ---
 
 # 17. Make Errors Human-Friendly
+
+Error responses remain understandable.
 
 ---
 
@@ -599,22 +585,22 @@ Always.
 
 # 18. Use Transactions for Critical Operations
 
-Borrowing books affects multiple things.
+Critical workflows use transactional safety.
 
 ---
 
-# Example
+# Borrow Workflow
 
-Borrow operation:
+Borrowing performs:
 
 * create borrow record
 * reduce available copies
 
-Both MUST succeed together.
+Both operations succeed together or fail together.
 
 ---
 
-# Use
+# REQUIRED
 
 ```java
 @Transactional
@@ -623,6 +609,8 @@ Both MUST succeed together.
 ---
 
 # 19. Design APIs Around Actions
+
+REST APIs remain explicit and action-oriented.
 
 ---
 
@@ -633,8 +621,6 @@ POST /borrow/{bookId}
 POST /return/{borrowId}
 ```
 
-Action-oriented.
-
 ---
 
 # BAD
@@ -643,24 +629,26 @@ Action-oriented.
 /processBookOperation
 ```
 
-Too vague.
+Ambiguous endpoints are prohibited.
 
 ---
 
 # 20. Build for Future Extensions Without Overengineering
 
+The architecture supports future expansion while remaining simple.
+
 ---
 
-# GOOD FOUNDATION
+# FUTURE EXTENSIONS
 
-You can later add:
+```text
+penalties
+mobile app
+analytics
+recommendations
+```
 
-* penalties
-* mobile app
-* analytics
-* recommendations
-
-WITHOUT rewriting the core system.
+These additions must not require rewriting the core architecture.
 
 ---
 
@@ -756,7 +744,7 @@ exception/
 config/
 ```
 
-Feature-based organization is cleaner than giant technical folders.
+Feature-based organization is mandatory.
 
 ---
 
@@ -782,7 +770,7 @@ Build:
 
 * Spring Boot setup
 * PostgreSQL
-* JWT auth
+* JWT authentication
 * Email verification
 * MFA
 
@@ -814,7 +802,7 @@ Build:
 Build:
 
 * reservation queue
-* notifications later
+* notification integration
 
 ---
 
@@ -831,14 +819,12 @@ Improve:
 
 # Final Engineering Rule
 
-## If a solution feels:
+The system rejects solutions that are:
 
 * confusing
 * overabstracted
 * difficult to explain
-* “too smart”
-
-…it is probably the wrong solution.
+* unnecessarily clever
 
 Good OOP systems feel:
 

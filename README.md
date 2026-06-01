@@ -31,6 +31,9 @@ To make the target audience’s life easier by making an online app that tracks 
 - <b>School ID of the student</b>
 - <b>Email of the student</b>
 - <b>Books they borrowed or want to borrow.</b>
+
+# <b>Design Patterns</b>
+For a summary of the design patterns used in this project, see [DESIGN_PATTERNS.md](./DESIGN_PATTERNS.md).
 	
 	
 

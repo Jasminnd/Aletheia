@@ -6,7 +6,7 @@
 - Personal md and teamchangelog creation <br>
 - All three members contributed to the project requirements, context-rules, and additional rules
 
-##[2026-05-25] 
+###[2026-05-25] 
 
 FEATURE 1:
 - Backend Foundation Setup
@@ -42,7 +42,7 @@ TESTS:
 - Login authentication tests
 
 
-##[2026-05-27]
+###[2026-05-27]
 
 FEATURE:
 - Book Module Foundation
